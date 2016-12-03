@@ -1,0 +1,206 @@
+<html>
+  <head>
+    <title>Experimental WebGL renderer for Vega</title>
+    <script src="https://vega.github.io/vega-editor/vendor/d3.min.js"></script>
+    <script src="https://vega.github.io/vega-editor/vendor/d3.geo.projection.min.js"></script>
+    <script src="https://vega.github.io/vega-editor/vendor/topojson.js"></script>
+    <script src="https://vega.github.io/vega-editor/vendor/d3.layout.cloud.js"></script>
+    <script src="vega.js" charset="utf-8"></script>
+    <script src="vega-webgl-renderer.js" charset="utf-8"></script>
+    <style>
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+    }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h3>
+        Experimental WebGL renderer for Vega
+      </h3>
+      <div>
+        <a href="https://github.com/jeffbaumes/vega-webgl">Code</a>
+        by <a href="https://twitter.com/jeffbaumes">Jeff</a>
+        at <a href="http://www.kitware.com/">Kitware</a>.
+        Funded by DARPA/AFRL XDATA.
+      </div>
+      <select id="spec">
+        <option value="airports">airports</option>
+        <option value="arc">arc</option>
+        <option value="area">area</option>
+        <option value="bandsize">bandsize</option>
+        <option value="bar-hover-label">bar-hover-label</option>
+        <option value="bar">bar</option>
+        <option value="barley">barley</option>
+        <option value="budget-forecasts">budget-forecasts</option>
+        <option value="chart">chart</option>
+        <option value="choropleth">choropleth</option>
+        <option value="crossfilter-multi">crossfilter-multi</option>
+        <option value="crossfilter">crossfilter</option>
+        <option value="dimpvis">dimpvis</option>
+        <option value="driving">driving</option>
+        <option value="error">error</option>
+        <option value="falkensee">falkensee</option>
+        <option value="force-beeswarm">force-beeswarm</option>
+        <option value="force-network">force-network</option>
+        <option value="gradient">gradient</option>
+        <option value="grouped-bar">grouped-bar</option>
+        <option value="heatmap-lines">heatmap-lines</option>
+        <option value="heatmap">heatmap</option>
+        <option value="histogram">histogram</option>
+        <option value="horizon">horizon</option>
+        <option value="images">images</option>
+        <option value="jobs">jobs</option>
+        <option value="legends">legends</option>
+        <option value="lifelines">lifelines</option>
+        <option value="map-bind">map-bind</option>
+        <option value="map">map</option>
+        <option value="matrix-reorder">matrix-reorder</option>
+        <option value="nested">nested</option>
+        <option value="overview-detail">overview-detail</option>
+        <option value="panzoom">panzoom</option>
+        <option value="parallel-coords">parallel-coords</option>
+        <option value="playfair">playfair</option>
+        <option value="population">population</option>
+        <option value="scale">scale</option>
+        <option value="shift-select">shift-select</option>
+        <option value="splom-inner">splom-inner</option>
+        <option value="splom-outer">splom-outer</option>
+        <option value="stacked-area">stacked-area</option>
+        <option value="stacked-bar">stacked-bar</option>
+        <option value="stocks-index">stocks-index</option>
+        <option value="tree-radial">tree-radial</option>
+        <option value="treemap">treemap</option>
+        <option value="violin-plot">violin-plot</option>
+        <option value="weather">weather</option>
+        <option value="wordcloud">wordcloud</option>
+      </select>
+      <select id="renderer">
+        <option value="webgl">webgl</option>
+        <option value="canvas">canvas</option>
+        <option value="svg">svg</option>
+      </select>
+      <span id="webgl-controls">
+        <input type="checkbox" id="rotate">rotate</input>
+        <input type="checkbox" id="bounce">bounce</input>
+      </span>
+    </div>
+    <div id="vis"></div>
+  </body>
+<script type="text/javascript">
+// parse a spec and create a visualization view
+
+// Known issues
+
+// playfair: one missing black triangle upper right
+
+// heatmap, gradient, legends: handle gradient
+// horizon: do something for group.clip
+// line dashes (barley, nested)
+// do something in clipToBounds?
+// fixup closed paths in extrude-polyline
+// interaction / picking
+// optimize rect with no rounded corners
+// some "wild" miter joins (driving)
+// lifelines vertical lines and text misplaced
+// area base is jittered too much (overview-detail, stacked-area)
+// panzoom not nearly as smooth as canvas
+// memory leak of image textures (cache?, replace?)
+
+// density: errors on 2d canvas?
+// movies-sort: messes up GL - had to end process in Chrome proc monitor
+
+// 2d canvas regression of text rendering misplaced and overplotted (jobs, images, etc.)
+
+//     "pretest": "rm -rf build && mkdir build && rollup -f umd -g d3-path:d3,d3-shape:d3,vega-loader:vega,parse-svg-path:parse,simplify-path:simplify,svg-path-contours:contours,triangulate-contours:triangulate,d3-color:d3 -n vega -o build/vega-scenegraph.js -- index.js && bin/schema > build/vega-scenegraph-schema.json",
+
+var view = null;
+var start = null;
+var frameId = null;
+var bounce = false;
+var rotate = false;
+var animating = false;
+var renderer = document.querySelector('#renderer').value;
+var specName = document.querySelector('#spec').value;
+
+function step(timestamp) {
+  if (!start) start = timestamp;
+  var progress = timestamp - start;
+  if (view) {
+    view._renderer
+      .depthTest(bounce)
+      .translate(0, 0, rotate ? -1 : 0)
+      .rotate(0, rotate ? progress / 2000 : 0, rotate ? progress / 4000 : 0)
+      .zFactor(bounce ? Math.sin(progress / 1000 * Math.PI) : 0);
+    view._renderer.frame();
+  }
+  frameId = window.requestAnimationFrame(step);
+}
+
+function updateAnimation() {
+  if (!(rotate || bounce) && animating) {
+    window.cancelAnimationFrame(frameId);
+    start = null;
+    if (view && renderer === 'webgl') {
+      view._renderer.depthTest(false).translate(0, 0, 0).rotate(0, 0, 0).zFactor(0);
+      view._renderer.frame();
+    }
+    animating = false;
+  } else if ((rotate || bounce) && !animating) {
+    frameId = window.requestAnimationFrame(step);
+    animating = true;
+  };
+}
+
+function load() {
+  fetch('spec/' + specName + '.vg.json')
+      .then(function(response) { return response.json(); })
+      .then(function(spec) {
+        var runtime = vega.parse(spec);
+        view = new vega.View(runtime)
+          .logLevel(vega.Warn) // set view logging level
+          .initialize(document.querySelector('#vis')) // set parent DOM element
+          .renderer(renderer) // set render type (defaults to 'canvas')
+          .hover(); // enable hover event processing
+
+        if (renderer === 'webgl') {
+          view._renderer.randomZ(true);
+          document.querySelector('#webgl-controls').style.display = 'inline';
+        } else {
+          document.querySelector('#rotate').checked = false;
+          document.querySelector('#bounce').checked = false;
+          rotate = false;
+          bounce = false;
+          updateAnimation();
+          document.querySelector('#webgl-controls').style.display = 'none';
+        }
+
+        view.run();
+      });
+}
+
+document.querySelector('#spec').addEventListener('change', function (e) {
+  specName = e.target.value;
+  load();
+});
+
+document.querySelector('#renderer').addEventListener('change', function (e) {
+  renderer = e.target.value;
+  load();
+});
+
+document.querySelector('#rotate').addEventListener('change', function (e) {
+  rotate = e.target.checked;
+  updateAnimation();
+});
+
+document.querySelector('#bounce').addEventListener('change', function (e) {
+  bounce = e.target.checked;
+  updateAnimation();
+});
+
+load();
+updateAnimation();
+
+</script>
+</html>
