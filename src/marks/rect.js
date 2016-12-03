@@ -3,6 +3,8 @@ import drawGeometry from '../util/drawGeometry';
 import geometryForItem from '../path/geometryForItem';
 import color from '../util/color';
 
+import {Marks as marks} from 'vega-scenegraph';
+
 function drawGL(gl, scene, bounds) {
   var unit, pos, size,
       strokeWidth, strokeOpacity, strokeColor,
@@ -23,7 +25,7 @@ function drawGL(gl, scene, bounds) {
     }
   }
   if (anyGradients) {
-    drawAll(draw)(gl._textContext, scene, bounds);
+    marks.rect.draw(gl._textContext, scene, bounds);
     return;
   }
 

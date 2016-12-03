@@ -1,8 +1,4 @@
-import curves from './curves';
-import symbols from './symbols';
-
-import {default as vg_rect} from './rectangle';
-import {default as vg_trail} from './trail';
+import {pathCurves, pathSymbols, pathRectangle, pathTrail} from 'vega-scenegraph';
 
 import geometryForPath from './geometryForPath';
 
@@ -24,15 +20,15 @@ function cr(item)    { return item.cornerRadius || 0; }
 function pa(item)    { return item.padAngle || 0; }
 function def(item)   { return !(item.defined === false); }
 function size(item)  { return item.size == null ? 64 : item.size; }
-function type(item) { return symbols(item.shape || 'circle'); }
+function type(item) { return pathSymbols(item.shape || 'circle'); }
 
 var arcShape    = d3_arc().cornerRadius(cr).padAngle(pa),
     areavShape  = d3_area().x(x).y1(y).y0(yh).defined(def),
     areahShape  = d3_area().y(y).x1(x).x0(xw).defined(def),
     lineShape   = d3_line().x(x).y(y).defined(def),
-    trailShape  = vg_trail().x(x).y(y).defined(def).size(wh),
-    rectShape   = vg_rect().x(x).y(y).width(w).height(h).cornerRadius(cr),
-    rectShapeGL = vg_rect().x(0).y(0).width(w).height(h).cornerRadius(cr),
+    trailShape  = pathTrail().x(x).y(y).defined(def).size(wh),
+    rectShape   = pathRectangle().x(x).y(y).width(w).height(h).cornerRadius(cr),
+    rectShapeGL = pathRectangle().x(0).y(0).width(w).height(h).cornerRadius(cr),
     symbolShape = d3_symbol().type(type).size(size);
 
 export function arc(context, item) {
@@ -47,7 +43,7 @@ export function area(context, items) {
       interp = item.interpolate || 'linear',
       s = (interp === 'trail' ? trailShape
         : (item.orient === 'horizontal' ? areahShape : areavShape)
-            .curve(curves(interp, item.orient, item.tension))
+            .curve(pathCurves(interp, item.orient, item.tension))
       )
   if (!context || context.arc) {
     return s.context(context)(items);
@@ -66,7 +62,7 @@ export function shape(context, item) {
 export function line(context, items) {
   var item = items[0],
       interp = item.interpolate || 'linear',
-      s = lineShape.curve(curves(interp, item.orient, item.tension));
+      s = lineShape.curve(pathCurves(interp, item.orient, item.tension));
   if (!context || context.arc) {
     return s.context(context)(items);
   }
