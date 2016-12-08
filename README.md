@@ -14,16 +14,15 @@ Major features
   "scale" example in the demo (Note: Do not attempt that example with the
   SVG renderer, it will lock your browser for a while).
 
-Required changes to Vega
-------------------------
 
-The following changes add support for custom renderers in Vega:
+Build
+-----
 
-* [vega changes](https://github.com/vega/vega/compare/master...jeffbaumes:modular-renderer)
-* [vega-scenegraph changes](https://github.com/vega/vega-scenegraph/compare/master...jeffbaumes:modular-renderer)
-* [vega-view changes](https://github.com/vega/vega-view/compare/master...jeffbaumes:modular-renderer)
+```
+npm run build
+```
 
-There is also one minor change to [extrude-polyline](https://github.com/mattdesl/extrude-polyline/compare/master...jeffbaumes:closed-path)
+Note: there is one minor change to [extrude-polyline](https://github.com/mattdesl/extrude-polyline/compare/master...jeffbaumes:closed-path)
 which hacks in a way to close mitered strokes.
 
 Known issues
