@@ -1,30 +1,25 @@
 #!/usr/bin/env node
 
 var rollup = require('rollup'),
-    nodeResolve = require('rollup-plugin-node-resolve'),
+    resolve = require('rollup-plugin-node-resolve'),
     commonjs = require('rollup-plugin-commonjs'),
-    externals = process.argv[2] === '-e',
-    output = externals ? 'vega-webgl-renderer.ext.js' : 'vega-webgl-renderer.js';
+    output = 'vega-webgl-renderer.js';
 
-var modules = !externals ? [] : [
+var modules = [
   'd3-color',
-  'parse-svg-path',
-  'simplify-path',
-  'svg-path-contours',
-  'triangulate-contours',
   'vega-scenegraph'
 ];
 
-var module_globals = modules.reduce(
-  function(map, _) { return map[_] = 'd3', map; },
-  {}
-);
+var module_globals = {
+  'd3-color': 'd3',
+  'vega-scenegraph': 'vega'
+};
 
 rollup.rollup({
   entry: 'index.js',
   external: modules,
   plugins: [
-    resolveCache(nodeResolve({jsnext: true, skip: ['yargs']})),
+    resolve(),
     commonjs()
   ]
 }).then(function(bundle) {
@@ -40,20 +35,4 @@ rollup.rollup({
 
 function abort(error) {
   console.error(error.stack);
-}
-
-/**
- * Rollup plugin that caches node_modules resolutions. This ensures
- * only one version of each module is included in the output bundle,
- * BUT assumes that all shared dependencies are of the same version.
- */
-function resolveCache(_) {
-  var cache = {};
-  return {
-    resolveId: function(importee, importer) {
-      return (importee && importee[0] !== '.')
-        ? cache[importee] || (cache[importee] = _.resolveId(importee, importer))
-        : _.resolveId(importee, importer);
-    }
-  };
 }

@@ -17,7 +17,7 @@
     "url": "http://github.com/jeffbaumes/vega-webgl-renderer.git"
   },
   "scripts": {
-    "build": "npm run test && bin/rollup",
+    "build": "bin/rollup",
     "pretest": "rm -rf build && mkdir build && bin/rollup",
     "test:server": "sh test/test-server-up.sh >.server.log",
     "test:server:down": "sh test/test-server-down.sh",
