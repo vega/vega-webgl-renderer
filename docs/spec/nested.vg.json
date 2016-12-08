@@ -21,10 +21,10 @@
   "signals": [
     {
       "name": "height",
-      "update": "extent[1] * bandSize"
+      "update": "extent[1] * rangeStep"
     },
     {
-      "name": "bandSize",
+      "name": "rangeStep",
       "value": 20
     }
   ],
@@ -109,8 +109,8 @@
         "enter": {
           "x": {"value": 0},
           "width": {"signal": "width"},
-          "y": {"field": "y0", "mult": {"signal": "bandSize"}},
-          "y2": {"field": "y1", "mult": {"signal": "bandSize"}}
+          "y": {"field": "y0", "mult": {"signal": "rangeStep"}},
+          "y2": {"field": "y1", "mult": {"signal": "rangeStep"}}
         }
       },
 
@@ -121,7 +121,7 @@
           "padding": 0.11,
           "round": true,
           "domain": {"data": "faceted_tuples", "field": "b"},
-          "bandSize": {"signal": "bandSize"}
+          "rangeStep": {"signal": "rangeStep"}
         }
       ],
 

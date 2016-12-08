@@ -5642,66 +5642,6 @@ function rectangleGL(context, item, x, y) {
   return geometryForPath(context, rectShapeGL.context(null)(item, x, y), 0.1);
 }
 
-function compare(a, b) {
-  return a.zindex - b.zindex || a.index - b.index;
-}
-
-function zorder(scene) {
-  if (!scene.zdirty) return scene.zitems;
-
-  var items = scene.items,
-      output = [], item, i, n;
-
-  for (i=0, n=items.length; i<n; ++i) {
-    item = items[i];
-    item.index = i;
-    if (item.zindex) output.push(item);
-  }
-
-  scene.zdirty = false;
-  return scene.zitems = output.sort(compare);
-}
-
-function visit(scene, visitor) {
-  var items = scene.items, i, n;
-  if (!items || !items.length) return;
-
-  var zitems = zorder(scene);
-
-  if (zitems && zitems.length) {
-    for (i=0, n=items.length; i<n; ++i) {
-      if (!items[i].zindex) visitor(items[i]);
-    }
-    items = zitems;
-  }
-
-  for (i=0, n=items.length; i<n; ++i) {
-    visitor(items[i]);
-  }
-}
-
-// export function pickVisit(scene, visitor) {
-//   var items = scene.items, hit, i;
-//   if (!items || !items.length) return null;
-//
-//   var zitems = zorder(scene);
-//   if (zitems && zitems.length) items = zitems;
-//
-//   for (i=items.length; --i >= 0;) {
-//     if (hit = visitor(items[i])) return hit;
-//   }
-//
-//   if (items === zitems) {
-//     for (items=scene.items, i=items.length; --i >= 0;) {
-//       if (!items[i].zindex) {
-//         if (hit = visitor(items[i])) return hit;
-//       }
-//     }
-//   }
-//
-//   return null;
-// }
-
 var drawGeometry = function(geom, gl, item) {
   var opacity = item.opacity == null ? 1 : item.opacity,
       tx = gl._tx + gl._origin[0],
@@ -5740,9 +5680,6 @@ var color$1 = function(context, item, value) {
   }
   if (cache[value]) {
     return cache[value];
-  }
-  if (!d3Color.color(value)) {
-    console.log(value);
   }
   var rgb = d3Color.color(value).rgb();
   cache[value] = [rgb.r / 255, rgb.g / 255, rgb.b / 255];
@@ -6246,7 +6183,7 @@ var geometryForItem = function(context, item, shapeGeom, opacity) {
 var markItemPath = function(type, shape) {
 
   function drawGL(context, scene, bounds) {
-    visit(scene, function(item) {
+    vegaScenegraph.sceneVisit(scene, function(item) {
       if (bounds && !bounds.intersects(item.bounds)) return; // bounds check
 
       var x = item.x || 0,
@@ -6309,7 +6246,7 @@ var area$2 = markMultiItemPath('area', area$$1);
 function drawGL(context, scene, bounds) {
   var renderer = this;
 
-  visit(scene, function(group) {
+  vegaScenegraph.sceneVisit(scene, function(group) {
     var gx = group.x || 0,
         gy = group.y || 0,
         w = group.width || 0,
@@ -6343,7 +6280,7 @@ function drawGL(context, scene, bounds) {
     if (bounds) bounds.translate(-gx, -gy);
 
     // draw group contents
-    visit(group, function(item) {
+    vegaScenegraph.sceneVisit(group, function(item) {
       renderer.draw(context, item, bounds);
     });
 
@@ -6541,7 +6478,7 @@ function imageYOffset(baseline, h) {
 function drawGL$1(context, scene, bounds) {
   var renderer = this;
 
-  visit(scene, function(item) {
+  vegaScenegraph.sceneVisit(scene, function(item) {
     if (bounds && !bounds.intersects(item.bounds)) return; // bounds check
 
     var image = getImage(item, renderer),
@@ -6573,7 +6510,7 @@ var image = {
 var line$3 = markMultiItemPath('line', line$$1);
 
 function drawGL$2(context, scene, bounds) {
-  visit(scene, function(item) {
+  vegaScenegraph.sceneVisit(scene, function(item) {
     var path = item.path;
     if (path == null) return true;
 
@@ -6672,7 +6609,7 @@ function drawGL$3(gl, scene, bounds) {
     gl.deleteBuffer(sg.cornerRadiusBuffer);
   }
 
-  visit(scene, function(item) {
+  vegaScenegraph.sceneVisit(scene, function(item) {
     var x = (item.x || 0) + gl._tx + gl._origin[0],
         y = (item.y || 0) + gl._ty + gl._origin[1],
         fc = color$1(gl, item, item.fill),
@@ -6800,7 +6737,7 @@ var rect = {
 };
 
 function drawGL$4(context, scene, bounds) {
-  visit(scene, function(item) {
+  vegaScenegraph.sceneVisit(scene, function(item) {
     var x1, y1, x2, y2, line, shapeGeom;
     if (bounds && !bounds.intersects(item.bounds)) return; // bounds check
     if (context._fullRedraw || item._dirty || !item._geom || item._geom.deleted) {
@@ -6902,7 +6839,7 @@ function drawGL$5(gl, scene, bounds) {
     gl.deleteBuffer(sg.fillColorBuffer);
   }
 
-  visit(scene, function(item) {
+  vegaScenegraph.sceneVisit(scene, function(item) {
     var x = (item.x || 0) + gl._tx + gl._origin[0],
         y = (item.y || 0) + gl._ty + gl._origin[1],
         fc = color$1(gl, item, item.fill),
@@ -7055,14 +6992,6 @@ var inherits = function(child, parent) {
   proto.constructor = child;
   return proto;
 };
-
-// remove all child elements at or above the given index
-function clear(el, index) {
-  var nodes = el.childNodes,
-      curr = nodes.length;
-  while (curr > index) el.removeChild(nodes[--curr]);
-  return el;
-}
 
 var WebGL$1 = function(w, h) {
   var canvas = document.createElement('canvas');
@@ -7785,7 +7714,7 @@ var tempBounds = new vegaScenegraph.Bounds();
 prototype.initialize = function(el, width, height, origin) {
   this._canvas = WebGL$1(1, 1); // instantiate a small canvas
   if (el) {
-    clear(el, 0).appendChild(this._canvas);
+    vegaScenegraph.domClear(el, 0).appendChild(this._canvas);
     this._canvas.setAttribute('class', 'marks');
   }
   // this method will invoke resize to size the canvas appropriately
