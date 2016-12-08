@@ -1,5 +1,5 @@
+import {sceneVisit as visit} from 'vega-scenegraph';
 import {rectangleGL} from '../path/shapes';
-import {visit} from '../util/visit';
 import geometryForItem from '../path/geometryForItem';
 import drawGeometry from '../util/drawGeometry';
 

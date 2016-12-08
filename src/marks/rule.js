@@ -1,4 +1,4 @@
-import {visit} from '../util/visit';
+import {sceneVisit as visit} from 'vega-scenegraph';
 import drawGeometry from '../util/drawGeometry';
 import geometryForItem from '../path/geometryForItem';
 

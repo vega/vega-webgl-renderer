@@ -1,8 +1,7 @@
-import {Renderer, Bounds} from 'vega-scenegraph';
+import {Renderer, Bounds, domClear as clear} from 'vega-scenegraph';
 
 import marks from './marks/index';
 import inherits from './util/inherits';
-import {clear} from './util/dom';
 import WebGL from './util/webgl';
 import resize from './util/resize';
 import color from './util/color';

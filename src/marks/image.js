@@ -1,4 +1,4 @@
-import {visit} from '../util/visit';
+import {sceneVisit as visit} from 'vega-scenegraph';
 import {loadImageAndCreateTextureInfo} from '../util/image';
 
 function getImage(item, renderer) {
