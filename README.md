@@ -1,7 +1,7 @@
 WebGL renderer for [Vega](https://vega.github.io/vega)
 ======================================================
 
-[Demo](https://jeffbaumes.github.io/vega-webgl-renderer)
+[Demo](https://vega.github.io/vega-webgl-renderer)
 
 Major features
 --------------
