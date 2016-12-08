@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "height": 500,
   "padding": 5,
 
@@ -58,7 +58,7 @@
 
   "axes": [
     {"orient": "bottom", "scale": "layout", "zindex": 1},
-    {"orient": "left", "scale": "yscale", "count": 5, "zindex": 1}
+    {"orient": "left", "scale": "yscale", "tickCount": 5, "zindex": 1}
   ],
 
   "marks": [

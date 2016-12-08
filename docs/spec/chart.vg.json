@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 600,
   "height": 300,
   "padding": 10,
@@ -8,7 +8,7 @@
   "config": {
     "axisBand": {
       "bandPosition": 1,
-      "tickPadding": -1,
+      "labelPadding": -1,
       "tickExtra": true
     }
   },
@@ -87,7 +87,7 @@
     {
       "scale": "yscale",
       "orient": "left",
-      "count": 5,
+      "tickCount": 5,
       "grid": false,
       "domain": true,
       "title": "Left Title",
@@ -96,7 +96,7 @@
     {
       "scale": "yscale",
       "orient": "right",
-      "count": 5,
+      "tickCount": 5,
       "grid": true,
       "domain": true,
       "title": "Right Title",

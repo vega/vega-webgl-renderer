@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "padding": 10,
   "config": {
     "axis": {
@@ -206,24 +206,29 @@
         }
       },
 
+      "signals": [
+        {"name": "width", "update": "chartSize"},
+        {"name": "height", "update": "chartSize"}
+      ],
+
       "scales": [
         {
           "name": "innerX", "type": "linear",
           "zero": false, "nice": true,
           "domain": {"data": "iris", "field": {"signal": "parent.x.data"}},
-          "range": [0, {"signal": "chartSize"}]
+          "range": "width"
         },
         {
           "name": "innerY", "type": "linear",
           "zero": false, "nice": true,
           "domain": {"data": "iris", "field": {"signal": "parent.y.data"}},
-          "range": [{"signal": "chartSize"}, 0]
+          "range": "height"
         }
       ],
 
       "axes": [
-        {"orient": "bottom", "scale": "innerX", "count": 5},
-        {"orient": "left", "scale": "innerY", "count": 5}
+        {"orient": "bottom", "scale": "innerX", "tickCount": 5},
+        {"orient": "left", "scale": "innerY", "tickCount": 5}
       ],
 
       "marks": [

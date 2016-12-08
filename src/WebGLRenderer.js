@@ -1,5 +1,4 @@
-import {Renderer, Bounds, domClear as clear} from 'vega-scenegraph';
-
+import {Renderer, Bounds, domClear as clear, Marks as sceneMarks} from 'vega-scenegraph';
 import marks from './marks/index';
 import inherits from './util/inherits';
 import WebGL from './util/webgl';
@@ -162,7 +161,7 @@ prototype._render = function(scene, items) {
   if (items) {
     for (i = 0; i < items.length; i++) {
       items[i]._dirty = true;
-      if (items[i].exit && marks[items[i].mark.marktype].nested && items[i].mark.items.length) {
+      if (items[i].exit && sceneMarks[items[i].mark.marktype].nested && items[i].mark.items.length) {
         // Mark an item as dirty to force redraw of the nested mark
         items[i].mark.items[0]._dirty = true;
       }

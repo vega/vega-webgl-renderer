@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 600,
   "height": 300,
   "padding": 10,
@@ -76,7 +76,7 @@
     {
       "scale": "yscale",
       "orient": "left",
-      "count": 5,
+      "tickCount": 5,
       "zindex": 1
     },
     {

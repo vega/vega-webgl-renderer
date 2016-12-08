@@ -7838,7 +7838,7 @@ prototype._render = function(scene, items) {
   if (items) {
     for (i = 0; i < items.length; i++) {
       items[i]._dirty = true;
-      if (items[i].exit && marks[items[i].mark.marktype].nested && items[i].mark.items.length) {
+      if (items[i].exit && vegaScenegraph.Marks[items[i].mark.marktype].nested && items[i].mark.items.length) {
         // Mark an item as dirty to force redraw of the nested mark
         items[i].mark.items[0]._dirty = true;
       }

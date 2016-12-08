@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 250,
   "height": 200,
 
@@ -44,9 +44,9 @@
     {
       "orient": "right",
       "scale": "y",
-      "count": 3,
+      "tickCount": 3,
       "tickSize": 0,
-      "tickPadding": 0,
+      "labelPadding": 0,
       "grid": true,
       "domain": false,
       "zindex": 1,

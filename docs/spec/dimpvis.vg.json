@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 800,
   "height": 600,
   "padding": 5,
@@ -261,12 +261,12 @@
     {
       "title": "Fertility",
       "orient": "bottom", "scale": "x",
-      "grid": true, "count": 5
+      "grid": true, "tickCount": 5
     },
     {
       "title": "Life Expectancy",
       "orient": "left", "scale": "y",
-      "grid": true, "count": 5
+      "grid": true, "tickCount": 5
     }
   ],
 

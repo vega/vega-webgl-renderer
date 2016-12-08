@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 800,
   "height": 500,
   "padding": 5,
@@ -60,12 +60,12 @@
     {
       "orient": "top",
       "scale": "x",
-      "count": 5,
+      "tickCount": 5,
       "tickSize": 0,
       "grid": true,
       "domain": false,
       "encode": {
-        "axis": {
+        "domain": {
           "enter": { "stroke": {"value": "transparent"} }
         },
         "labels": {
@@ -81,13 +81,13 @@
     {
       "orient": "left",
       "scale": "y",
-      "count": 5,
+      "tickCount": 5,
       "tickSize": 0,
       "grid": true,
       "domain": false,
       "format": "$0.2f",
       "encode": {
-        "axis": {
+        "domain": {
           "enter": {"stroke": {"value": "transparent"}}
         },
         "labels": {

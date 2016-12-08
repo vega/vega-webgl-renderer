@@ -1,5 +1,5 @@
 {
-  "schema": {"language": "vega", "version": "3.0.0"},
+  "schema": {"language": "vega", "version": "3.0"},
   "width": 900,
   "height": 500,
   "autosize": "none",
@@ -75,7 +75,7 @@
       "type": "mercator",
       "scale": {"signal": "scale"},
       "rotate": [{"signal": "rotateX"}, 0, 0],
-      "center": [0, {"signal": "centerY"} ],
+      "center": [0, {"signal": "centerY"}],
       "translate": [{"signal": "tx"}, {"signal": "ty"}]
     }
   ],
