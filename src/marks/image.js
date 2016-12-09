@@ -31,8 +31,7 @@ function drawGL(context, scene, bounds) {
         x = item.x || 0,
         y = item.y || 0,
         w = item.width || image.width || 0,
-        h = item.height || image.height || 0,
-        opacity;
+        h = item.height || image.height || 0;
 
     x -= imageXOffset(item.align, w);
     y -= imageYOffset(item.baseline, h);

@@ -1,7 +1,7 @@
 import geometryForItem from './geometryForItem';
 
 export default function(context, item, shape, keyFunc) {
-  var key = keyFunc(item), i, shapeGeom, val;
+  var key = keyFunc(item), shapeGeom, val, v;
 
   if (context._shapeCache[key]) {
     context._shapeCacheHit++;
@@ -24,7 +24,6 @@ export default function(context, item, shape, keyFunc) {
     context._lastTriangleBuffer = null;
     context._shapeCache = {};
     context._shapeCacheSize = 0;
-    console.log('Shape cache cleared.');
   }
   context._shapeCache[key] = val;
   context._shapeCacheSize++;

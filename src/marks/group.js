@@ -11,7 +11,7 @@ function drawGL(context, scene, bounds) {
         gy = group.y || 0,
         w = group.width || 0,
         h = group.height || 0,
-        offset, opacity, oldClip;
+        offset, oldClip;
 
     // setup graphics context
     context._tx += gx;

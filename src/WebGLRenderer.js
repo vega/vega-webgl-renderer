@@ -1,4 +1,4 @@
-import {Renderer, Bounds, domClear as clear, Marks as sceneMarks} from 'vega-scenegraph';
+import {Renderer, domClear as clear, Marks as sceneMarks} from 'vega-scenegraph';
 import marks from './marks/index';
 import inherits from './util/inherits';
 import WebGL from './util/webgl';
@@ -22,8 +22,7 @@ export default function WebGLRenderer(imageLoader) {
 }
 
 var prototype = inherits(WebGLRenderer, Renderer),
-    base = Renderer.prototype,
-    tempBounds = new Bounds();
+    base = Renderer.prototype;
 
 prototype.initialize = function(el, width, height, origin) {
   this._canvas = WebGL(1, 1); // instantiate a small canvas
@@ -81,18 +80,9 @@ prototype.randomZ = function(val) {
   return this;
 };
 
-function clipToBounds(g, items) {
-  // TODO: do something here?
-}
-
-function translate(bounds, group) {
-  if (group == null) return bounds;
-  var b = tempBounds.clear().union(bounds);
-  for (; group != null; group = group.mark.group) {
-    b.translate(group.x || 0, group.y || 0);
-  }
-  return b;
-}
+// function clipToBounds(g, items) {
+//   // TODO: do something here?
+// }
 
 prototype._updateUniforms = function() {
   var gl = this.context();
@@ -131,9 +121,6 @@ prototype._updateUniforms = function() {
 
 prototype._render = function(scene, items) {
   var gl = this.context(),
-      o = this._origin,
-      w = this._width,
-      h = this._height,
       b, i;
 
   gl._tx = 0;
@@ -156,7 +143,8 @@ prototype._render = function(scene, items) {
 
   b = (!items || this._redraw)
     ? (this._redraw = false, null)
-    : clipToBounds(gl, items);
+    // : clipToBounds(gl, items);
+    : undefined;
 
   if (items) {
     for (i = 0; i < items.length; i++) {
@@ -230,7 +218,7 @@ prototype.toDataURL = function(scene) {
   return this.canvas().toDataURL("image/png", 1);
 };
 
-prototype.clear = function(x, y, w, h) {
+prototype.clear = function() {
   var gl = this.context(), c;
   if (this._bgcolor != null) {
     c = color(gl, null, this._bgcolor);

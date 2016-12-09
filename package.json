@@ -21,7 +21,8 @@
     "pretest": "rm -rf build && mkdir build && bin/rollup",
     "test:server": "sh test/test-server-up.sh >.server.log",
     "test:server:down": "sh test/test-server-down.sh",
-    "test": "result=true; npm run test:server:down; npm run test:server && wdio wdio.conf.js && eslint index.js src test || result=false; npm run test:server:down; ${result}",
+    "lint": "eslint index.js src test",
+    "test": "result=true; npm run test:server:down; npm run test:server && wdio wdio.conf.js && npm run lint || result=false; npm run test:server:down; ${result}",
     "prepublish": "npm run build",
     "postpublish": "git push && git push --tags && zip -j build/vega-webgl-renderer.zip -- LICENSE README.md build/vega-webgl-renderer.js build/vega-webgl-renderer.min.js"
   },

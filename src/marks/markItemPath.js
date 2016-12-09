@@ -1,7 +1,6 @@
 import {sceneVisit as visit} from 'vega-scenegraph';
 import drawGeometry from '../util/drawGeometry';
 import geometryForItem from '../path/geometryForItem';
-import geometryForShape from '../path/geometryForShape';
 
 export default function(type, shape) {
 
@@ -11,7 +10,7 @@ export default function(type, shape) {
 
       var x = item.x || 0,
           y = item.y || 0,
-          i, shapeGeom;
+          shapeGeom;
 
       context._tx += x;
       context._ty += y;

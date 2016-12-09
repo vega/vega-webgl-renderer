@@ -1,10 +1,7 @@
 import {sceneVisit as visit} from 'vega-scenegraph';
 import color from '../util/color';
-import drawGeometry from '../util/drawGeometry';
-import geometryForItem from '../path/geometryForItem';
-import geometryForShape from '../path/geometryForShape';
 
-function drawGL(gl, scene, bounds) {
+function drawGL(gl, scene) {
   var unit, pos, size, shape,
       strokeWidth, strokeOpacity, strokeColor,
       fillOpacity, fillColor,

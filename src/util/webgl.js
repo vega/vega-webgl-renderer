@@ -45,7 +45,7 @@ export default function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   var fragCode =
@@ -63,7 +63,7 @@ export default function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   var shaderProgram = gl.createProgram();
@@ -113,7 +113,7 @@ export default function(w, h) {
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-  var vertCode =
+  vertCode =
     'attribute vec2 a_position;' +
     'attribute vec2 a_texcoord;' +
     'uniform mat4 u_matrix;' +
@@ -122,28 +122,28 @@ export default function(w, h) {
     '  gl_Position = u_matrix * vec4(a_position, -1.0, 1.0);' +
     '  v_texcoord = a_texcoord;' +
     '}';
-  var vertShader = gl.createShader(gl.VERTEX_SHADER);
+  vertShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
-  var fragCode =
+  fragCode =
     'precision mediump float;' +
     'varying vec2 v_texcoord;' +
     'uniform sampler2D u_texture;' +
     'void main() {' +
     '  gl_FragColor = texture2D(u_texture, v_texcoord);' +
     '}';
-  var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+  fragShader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
-  var shaderProgram = gl.createProgram();
+  shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertShader);
   gl.attachShader(shaderProgram, fragShader);
   gl.linkProgram(shaderProgram);
@@ -156,7 +156,7 @@ export default function(w, h) {
     1, 0,
     1, 0,
     0, 1,
-    1, 1,
+    1, 1
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -168,7 +168,7 @@ export default function(w, h) {
     1, 0,
     1, 0,
     0, 1,
-    1, 1,
+    1, 1
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
 
@@ -270,7 +270,7 @@ export default function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   fragCode = [
@@ -480,7 +480,7 @@ export default function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   shaderProgram = gl.createProgram();
@@ -539,7 +539,7 @@ export default function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   fragCode = [
@@ -637,7 +637,7 @@ export default function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   shaderProgram = gl.createProgram();

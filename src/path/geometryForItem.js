@@ -1,22 +1,19 @@
 import color from '../util/color';
 import extrude from 'extrude-polyline';
 
-export default function(context, item, shapeGeom, opacity) {
+export default function(context, item, shapeGeom) {
   var lw = (lw = item.strokeWidth) != null ? lw : 1,
       lc = (lc = item.strokeCap) != null ? lc : 'butt';
   var strokeMeshes = [];
-  var i, len, c, li, ci, mesh, triangles, colors, cell, p1, p2, p3, mp, mc, mcl,
-      triangleBuffer, colorBuffer, n = 0, fill = false, stroke = false, v;
+  var i, len, c, li, ci, mesh, triangles = [], colors = [], cell, p1, p2, p3, mp, mc, mcl,
+      triangleBuffer, colorBuffer, n = 0, fill = false, stroke = false;
   var opacity = item.opacity == null ? 1 : item.opacity;
   var fillOpacity = opacity * (item.fillOpacity==null ? 1 : item.fillOpacity);
-  var triangles = [];
-  var colors = [];
   var strokeOpacity = opacity * (item.strokeOpacity==null ? 1 : item.strokeOpacity),
       strokeExtrude,
       z = shapeGeom.z || 0,
       st = shapeGeom.triangles,
-      val,
-      key = shapeGeom.key + ';' + lw + ';' + lc + ';' + closed + ';' + item.fill + ';' + item.fillOpacity + ';' + item.stroke + ';' + item.strokeOpacity;
+      val;
 
   if (item.fill === 'transparent') {
     fillOpacity = 0;

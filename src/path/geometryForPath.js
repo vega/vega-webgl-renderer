@@ -29,9 +29,9 @@ export default function(context, path, threshold) {
     tri = triangulate(lines);
   }
   catch(e) {
-    console.log('Could not triangulate the following path:');
-    console.log(path);
-    console.log(e);
+    // console.log('Could not triangulate the following path:');
+    // console.log(path);
+    // console.log(e);
     tri = {positions: [], cells: []};
   }
 
@@ -62,7 +62,6 @@ export default function(context, path, threshold) {
   if (context._pathCacheSize > 10000) {
     context._pathCache = {};
     context._pathCacheSize = 0;
-    console.log('Geometry cache cleared.');
   }
   return geom;
 }

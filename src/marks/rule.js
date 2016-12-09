@@ -4,7 +4,7 @@ import geometryForItem from '../path/geometryForItem';
 
 function drawGL(context, scene, bounds) {
   visit(scene, function(item) {
-    var x1, y1, x2, y2, line, shapeGeom;
+    var x1, y1, x2, y2, shapeGeom;
     if (bounds && !bounds.intersects(item.bounds)) return; // bounds check
     if (context._fullRedraw || item._dirty || !item._geom || item._geom.deleted) {
       x1 = item.x || 0;

@@ -1,6 +1,4 @@
 import {sceneVisit as visit} from 'vega-scenegraph';
-import drawGeometry from '../util/drawGeometry';
-import geometryForItem from '../path/geometryForItem';
 import color from '../util/color';
 
 import {Marks as marks} from 'vega-scenegraph';

@@ -6,7 +6,6 @@ export default function(type, shape) {
   function drawGL(context, scene, bounds) {
     if (scene.items.length && (!bounds || bounds.intersects(scene.bounds))) {
       var item = scene.items[0];
-      var geom = shape(context, scene.items);
       var dirty = false;
       for (var i = 0; i < scene.items.length; i++) {
         if (scene.items[i]._dirty) {

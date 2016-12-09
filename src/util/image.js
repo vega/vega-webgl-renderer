@@ -61,8 +61,6 @@ export function drawImage(gl, texInfo, matrix) {
   gl.bindBuffer(gl.ARRAY_BUFFER, gl._imageTexcoordBuffer);
   gl.enableVertexAttribArray(gl._imageTexcoordLocation);
   gl.vertexAttribPointer(gl._imageTexcoordLocation, 2, gl.FLOAT, false, 0, 0);
-  var w = gl.canvas.width / gl._ratio,
-      h = gl.canvas.height / gl._ratio;
   var preMatrix = [
     texInfo.w, 0, 0, 0,
     0, texInfo.h, 0, 0,

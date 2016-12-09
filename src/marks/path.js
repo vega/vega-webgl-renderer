@@ -3,7 +3,7 @@ import drawGeometry from '../util/drawGeometry';
 import geometryForPath from '../path/geometryForPath';
 import geometryForItem from '../path/geometryForItem';
 
-function drawGL(context, scene, bounds) {
+function drawGL(context, scene) {
   visit(scene, function(item) {
     var path = item.path;
     if (path == null) return true;
