@@ -4219,9 +4219,9 @@ var geometryForPath = function(context, path, threshold) {
     tri = index$11(lines);
   }
   catch(e) {
-    console.log('Could not triangulate the following path:');
-    console.log(path);
-    console.log(e);
+    // console.log('Could not triangulate the following path:');
+    // console.log(path);
+    // console.log(e);
     tri = {positions: [], cells: []};
   }
 
@@ -4252,7 +4252,6 @@ var geometryForPath = function(context, path, threshold) {
   if (context._pathCacheSize > 10000) {
     context._pathCache = {};
     context._pathCacheSize = 0;
-    console.log('Geometry cache cleared.');
   }
   return geom;
 };
@@ -6049,22 +6048,19 @@ function extrusions(positions, point, normal, scale) {
 
 var index$14 = Stroke;
 
-var geometryForItem = function(context, item, shapeGeom, opacity) {
+var geometryForItem = function(context, item, shapeGeom) {
   var lw = (lw = item.strokeWidth) != null ? lw : 1,
       lc = (lc = item.strokeCap) != null ? lc : 'butt';
   var strokeMeshes = [];
-  var i, len, c, li, ci, mesh, triangles, colors, cell, p1, p2, p3, mp, mc, mcl,
-      triangleBuffer, colorBuffer, n = 0, fill = false, stroke = false, v;
+  var i, len, c, li, ci, mesh, triangles = [], colors = [], cell, p1, p2, p3, mp, mc, mcl,
+      triangleBuffer, colorBuffer, n = 0, fill = false, stroke = false;
   var opacity = item.opacity == null ? 1 : item.opacity;
   var fillOpacity = opacity * (item.fillOpacity==null ? 1 : item.fillOpacity);
-  var triangles = [];
-  var colors = [];
   var strokeOpacity = opacity * (item.strokeOpacity==null ? 1 : item.strokeOpacity),
       strokeExtrude,
       z = shapeGeom.z || 0,
       st = shapeGeom.triangles,
-      val,
-      key = shapeGeom.key + ';' + lw + ';' + lc + ';' + closed + ';' + item.fill + ';' + item.fillOpacity + ';' + item.stroke + ';' + item.strokeOpacity;
+      val;
 
   if (item.fill === 'transparent') {
     fillOpacity = 0;
@@ -6188,7 +6184,7 @@ var markItemPath = function(type, shape) {
 
       var x = item.x || 0,
           y = item.y || 0,
-          i, shapeGeom;
+          shapeGeom;
 
       context._tx += x;
       context._ty += y;
@@ -6218,7 +6214,6 @@ var markMultiItemPath = function(type, shape) {
   function drawGL(context, scene, bounds) {
     if (scene.items.length && (!bounds || bounds.intersects(scene.bounds))) {
       var item = scene.items[0];
-      var geom = shape(context, scene.items);
       var dirty = false;
       for (var i = 0; i < scene.items.length; i++) {
         if (scene.items[i]._dirty) {
@@ -6251,7 +6246,7 @@ function drawGL(context, scene, bounds) {
         gy = group.y || 0,
         w = group.width || 0,
         h = group.height || 0,
-        offset, opacity, oldClip;
+        offset, oldClip;
 
     // setup graphics context
     context._tx += gx;
@@ -6371,7 +6366,7 @@ function rotateZ(a) {
   ];
 }
 
-function translate$1(x, y, z) {
+function translate(x, y, z) {
   return [
     1, 0, 0, 0,
     0, 1, 0, 0,
@@ -6441,8 +6436,6 @@ function drawImage(gl, texInfo, matrix) {
   gl.bindBuffer(gl.ARRAY_BUFFER, gl._imageTexcoordBuffer);
   gl.enableVertexAttribArray(gl._imageTexcoordLocation);
   gl.vertexAttribPointer(gl._imageTexcoordLocation, 2, gl.FLOAT, false, 0, 0);
-  var w = gl.canvas.width / gl._ratio,
-      h = gl.canvas.height / gl._ratio;
   var preMatrix = [
     texInfo.w, 0, 0, 0,
     0, texInfo.h, 0, 0,
@@ -6485,8 +6478,7 @@ function drawGL$1(context, scene, bounds) {
         x = item.x || 0,
         y = item.y || 0,
         w = item.width || image.width || 0,
-        h = item.height || image.height || 0,
-        opacity;
+        h = item.height || image.height || 0;
 
     x -= imageXOffset(item.align, w);
     y -= imageYOffset(item.baseline, h);
@@ -6509,7 +6501,7 @@ var image = {
 
 var line$3 = markMultiItemPath('line', line$$1);
 
-function drawGL$2(context, scene, bounds) {
+function drawGL$2(context, scene) {
   vegaScenegraph.sceneVisit(scene, function(item) {
     var path = item.path;
     if (path == null) return true;
@@ -6738,7 +6730,7 @@ var rect = {
 
 function drawGL$4(context, scene, bounds) {
   vegaScenegraph.sceneVisit(scene, function(item) {
-    var x1, y1, x2, y2, line, shapeGeom;
+    var x1, y1, x2, y2, shapeGeom;
     if (bounds && !bounds.intersects(item.bounds)) return; // bounds check
     if (context._fullRedraw || item._dirty || !item._geom || item._geom.deleted) {
       x1 = item.x || 0;
@@ -6763,7 +6755,7 @@ var rule = {
 
 var shape$1 = markItemPath('shape', shape);
 
-function drawGL$5(gl, scene, bounds) {
+function drawGL$5(gl, scene) {
   var unit, pos, size, shape,
       strokeWidth, strokeOpacity, strokeColor,
       fillOpacity, fillColor,
@@ -7038,7 +7030,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   var fragCode =
@@ -7056,7 +7048,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   var shaderProgram = gl.createProgram();
@@ -7106,7 +7098,7 @@ var WebGL$1 = function(w, h) {
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-  var vertCode =
+  vertCode =
     'attribute vec2 a_position;' +
     'attribute vec2 a_texcoord;' +
     'uniform mat4 u_matrix;' +
@@ -7115,28 +7107,28 @@ var WebGL$1 = function(w, h) {
     '  gl_Position = u_matrix * vec4(a_position, -1.0, 1.0);' +
     '  v_texcoord = a_texcoord;' +
     '}';
-  var vertShader = gl.createShader(gl.VERTEX_SHADER);
+  vertShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
-  var fragCode =
+  fragCode =
     'precision mediump float;' +
     'varying vec2 v_texcoord;' +
     'uniform sampler2D u_texture;' +
     'void main() {' +
     '  gl_FragColor = texture2D(u_texture, v_texcoord);' +
     '}';
-  var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
+  fragShader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
-  var shaderProgram = gl.createProgram();
+  shaderProgram = gl.createProgram();
   gl.attachShader(shaderProgram, vertShader);
   gl.attachShader(shaderProgram, fragShader);
   gl.linkProgram(shaderProgram);
@@ -7149,7 +7141,7 @@ var WebGL$1 = function(w, h) {
     1, 0,
     1, 0,
     0, 1,
-    1, 1,
+    1, 1
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
@@ -7161,7 +7153,7 @@ var WebGL$1 = function(w, h) {
     1, 0,
     1, 0,
     0, 1,
-    1, 1,
+    1, 1
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texcoords), gl.STATIC_DRAW);
 
@@ -7263,7 +7255,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   fragCode = [
@@ -7473,7 +7465,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   shaderProgram = gl.createProgram();
@@ -7532,7 +7524,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(vertShader, vertCode);
   gl.compileShader(vertShader);
   if (!gl.getShaderParameter(vertShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(vertShader));
+    throw gl.getShaderInfoLog(vertShader);
   }
 
   fragCode = [
@@ -7630,7 +7622,7 @@ var WebGL$1 = function(w, h) {
   gl.shaderSource(fragShader, fragCode);
   gl.compileShader(fragShader);
   if (!gl.getShaderParameter(fragShader, gl.COMPILE_STATUS)) {
-    console.log(gl.getShaderInfoLog(fragShader));
+    throw gl.getShaderInfoLog(fragShader);
   }
 
   shaderProgram = gl.createProgram();
@@ -7709,7 +7701,6 @@ function WebGLRenderer(imageLoader) {
 
 var prototype = inherits(WebGLRenderer, vegaScenegraph.Renderer);
 var base = vegaScenegraph.Renderer.prototype;
-var tempBounds = new vegaScenegraph.Bounds();
 
 prototype.initialize = function(el, width, height, origin) {
   this._canvas = WebGL$1(1, 1); // instantiate a small canvas
@@ -7767,9 +7758,9 @@ prototype.randomZ = function(val) {
   return this;
 };
 
-function clipToBounds(g, items) {
-  // TODO: do something here?
-}
+// function clipToBounds(g, items) {
+//   // TODO: do something here?
+// }
 
 prototype._updateUniforms = function() {
   var gl = this.context();
@@ -7793,11 +7784,11 @@ prototype._updateUniforms = function() {
   ];
 
   this.matrix = multiply(this.matrix, perspective(Math.PI/2, width/height, 0.01, 3000));
-  this.matrix = multiply(this.matrix, translate$1(this._translateX, this._translateY, (this._translateZ - 1)*height/width));
+  this.matrix = multiply(this.matrix, translate(this._translateX, this._translateY, (this._translateZ - 1)*height/width));
   this.matrix = multiply(this.matrix, rotateZ(this._angleZ));
   this.matrix = multiply(this.matrix, rotateY(this._angleY));
   this.matrix = multiply(this.matrix, rotateX(this._angleX));
-  this.matrix = multiply(this.matrix, translate$1(0, 0, 1));
+  this.matrix = multiply(this.matrix, translate(0, 0, 1));
   this.matrix = multiply(this.matrix, smooshMatrix);
 
   gl._matrix = this.matrix;
@@ -7808,9 +7799,6 @@ prototype._updateUniforms = function() {
 
 prototype._render = function(scene, items) {
   var gl = this.context(),
-      o = this._origin,
-      w = this._width,
-      h = this._height,
       b, i;
 
   gl._tx = 0;
@@ -7833,7 +7821,8 @@ prototype._render = function(scene, items) {
 
   b = (!items || this._redraw)
     ? (this._redraw = false, null)
-    : clipToBounds(gl, items);
+    // : clipToBounds(gl, items);
+    : undefined;
 
   if (items) {
     for (i = 0; i < items.length; i++) {
@@ -7907,7 +7896,7 @@ prototype.toDataURL = function(scene) {
   return this.canvas().toDataURL("image/png", 1);
 };
 
-prototype.clear = function(x, y, w, h) {
+prototype.clear = function() {
   var gl = this.context(), c;
   if (this._bgcolor != null) {
     c = color$1(gl, null, this._bgcolor);

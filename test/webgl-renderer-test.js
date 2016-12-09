@@ -1,3 +1,5 @@
+/*global it browser describe*/
+
 var fs = require('fs'),
     res = './test/resources/',
     assert = require('assert');
@@ -21,7 +23,6 @@ function loadScene(file) {
 function dataURLToBuffer(string) {
   var regex = /^data:.+\/(.+);base64,(.*)$/;
   var matches = string.match(regex);
-  var ext = matches[1];
   var data = matches[2];
   return new Buffer(data, 'base64');
 }
@@ -69,7 +70,7 @@ describe('WebGLRenderer', function() {
     assert.equal(image+'', file);
   });
 
-  it('should support clipping and gradients', function(test) {
+  it('should support clipping and gradients', function () {
     var scene = loadScene('scenegraph-defs.json');
     var image = render(scene, 102, 102);
     generate('png/scenegraph-defs.png', image);
@@ -83,7 +84,7 @@ describe('WebGLRenderer', function() {
     assert.equal(image+'', file);
   });
 
-  it('should support axes, legends and sub-groups', function(test) {
+  it('should support axes, legends and sub-groups', function () {
     var scene = loadScene('scenegraph-barley.json');
     var image = render(scene, 360, 740);
     generate('png/scenegraph-barley.png', image);
@@ -91,7 +92,7 @@ describe('WebGLRenderer', function() {
     assert.equal(image+'', file);
   });
 
-  // it('WebGLRenderer should support full redraw', function(test) {
+  // it('WebGLRenderer should support full redraw', function () {
   //   var scene = loadScene('scenegraph-rect.json');
   //   var r = new Renderer()
   //     .initialize(null, 400, 200)
@@ -120,7 +121,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should support enter-item redraw', function(test) {
+  // it('should support enter-item redraw', function () {
   //   var scene = loadScene('scenegraph-rect.json');
   //   var r = new Renderer()
   //     .initialize(null, 400, 200)
@@ -147,7 +148,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should support exit-item redraw', function(test) {
+  // it('should support exit-item redraw', function () {
   //   var scene = loadScene('scenegraph-rect.json');
   //   var r = new Renderer()
   //     .initialize(null, 400, 200)
@@ -165,7 +166,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should support single-item redraw', function(test) {
+  // it('should support single-item redraw', function () {
   //   var scene = loadScene('scenegraph-rect.json');
   //   var r = new Renderer()
   //     .initialize(null, 400, 200)
@@ -185,7 +186,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should support multi-item redraw', function(test) {
+  // it('should support multi-item redraw', function () {
   //   var scene = vega.fromJSON(vega.toJSON(marks['line-1']));
   //   var r = new Renderer()
   //     .initialize(null, 400, 400)
@@ -207,7 +208,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should support enter-group redraw', function(test) {
+  // it('should support enter-group redraw', function () {
   //   var scene = loadScene('scenegraph-barley.json');
   //   var r = new Renderer()
   //     .initialize(null, 500, 600)
@@ -227,7 +228,7 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
   //
-  // it('should skip empty item sets', function(test) {
+  // it('should skip empty item sets', function () {
   //   var scene = {marktype:'', items:[]};
   //   var types = [
   //     'arc',
@@ -251,14 +252,14 @@ describe('WebGLRenderer', function() {
   //   test.end();
   // });
 
-  it('should render arc mark', function(test) {
+  it('should render arc mark', function () {
     var image = render(marks.arc, 500, 500);
     generate('png/marks-arc.png', image);
     var file = load('png/marks-arc.png');
     assert.equal(image+'', file);
   });
 
-  it('should render horizontal area mark', function(test) {
+  it('should render horizontal area mark', function () {
     var image = render(marks['area-h'], 500, 500);
     generate('png/marks-area-h.png', image);
     var file = load('png/marks-area-h.png');
@@ -269,7 +270,7 @@ describe('WebGLRenderer', function() {
     // assert.equal(image+'', file);
   });
 
-  it('should render vertical area mark', function(test) {
+  it('should render vertical area mark', function () {
     var image = render(marks['area-v'], 500, 500);
     generate('png/marks-area-v.png', image);
     var file = load('png/marks-area-v.png');
@@ -280,28 +281,28 @@ describe('WebGLRenderer', function() {
     // assert.equal(image+'', file);
   });
 
-  it('should render area mark with breaks', function(test) {
+  it('should render area mark with breaks', function () {
     var image = render(marks['area-breaks'], 500, 500);
     generate('png/marks-area-breaks.png', image);
     var file = load('png/marks-area-breaks.png');
     assert.equal(image+'', file);
   });
 
-  it('should render trail area mark', function(test) {
+  it('should render trail area mark', function () {
     var image = render(marks['area-trail'], 500, 500);
     generate('png/marks-area-trail.png', image);
     var file = load('png/marks-area-trail.png');
     assert.equal(image+'', file);
   });
 
-  it('should render group mark', function(test) {
+  it('should render group mark', function () {
     var image = render(marks.group, 500, 500);
     generate('png/marks-group.png', image);
     var file = load('png/marks-group.png');
     assert.equal(image+'', file);
   });
 
-  it('should render image mark', function(test) {
+  it('should render image mark', function () {
     // renderAsync(marks.image, 500, 500, function(image) {
     //   generate('png/marks-image.png', image);
     //   var file = load('png/marks-image.png');
@@ -314,7 +315,7 @@ describe('WebGLRenderer', function() {
     assert.equal(image+'', file);
   });
 
-  // it('should skip invalid image', function(test) {
+  // it('should skip invalid image', function () {
   //   var scene = vega.fromJSON({
   //     marktype: 'image',
   //     items: [{url: 'does_not_exist.png'}]
@@ -327,7 +328,7 @@ describe('WebGLRenderer', function() {
   //   });
   // });
 
-  it('should render line mark', function(test) {
+  it('should render line mark', function () {
     var image = render(marks['line-1'], 500, 500);
     generate('png/marks-line-1.png', image);
     var file = load('png/marks-line-1.png');
@@ -343,14 +344,14 @@ describe('WebGLRenderer', function() {
     // assert.equal(image+'', file);
   });
 
-  it('should render line mark with breaks', function(test) {
+  it('should render line mark with breaks', function () {
     var image = render(marks['line-breaks'], 500, 500);
     generate('png/marks-line-breaks.png', image);
     var file = load('png/marks-line-breaks.png');
     assert.equal(image+'', file);
   });
 
-  it('should render path mark', function(test) {
+  it('should render path mark', function () {
     var image = render(marks.path, 500, 500);
     generate('png/marks-path.png', image);
     var file = load('png/marks-path.png');
@@ -361,28 +362,28 @@ describe('WebGLRenderer', function() {
     assert.equal(image+'', file);
   });
 
-  it('should render rect mark', function(test) {
+  it('should render rect mark', function () {
     var image = render(marks.rect, 500, 500);
     generate('png/marks-rect.png', image);
     var file = load('png/marks-rect.png');
     assert.equal(image+'', file);
   });
 
-  it('should render rule mark', function(test) {
+  it('should render rule mark', function () {
     var image = render(marks.rule, 500, 500);
     generate('png/marks-rule.png', image);
     var file = load('png/marks-rule.png');
     assert.equal(image+'', file);
   });
 
-  it('should render symbol mark', function(test) {
+  it('should render symbol mark', function () {
     var image = render(marks.symbol, 500, 500);
     generate('png/marks-symbol.png', image);
     var file = load('png/marks-symbol.png');
     assert.equal(image+'', file);
   });
 
-  it('should render text mark', function(test) {
+  it('should render text mark', function () {
     var image = render(marks.text, 500, 500);
     generate('png/marks-text.png', image);
     var file = load('png/marks-text.png');
