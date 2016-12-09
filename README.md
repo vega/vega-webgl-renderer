@@ -14,6 +14,36 @@ Major features
   "scale" example in the demo (Note: Do not attempt that example with the
   SVG renderer, it will lock your browser for a while).
 
+Usage
+-----
+
+Use this scaffolding to get started using the WebGL renderer. Instead of being
+directly usable after loading Vega, as the SVG and Canvas renderers are,
+the WebGL renderer is a plugin which requires the inclusion of an additional
+JavaScript library.
+
+The WebGL renderer requires Vega 3.0 (currently in beta).
+
+```html
+<body>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+  <!-- You will be able to use released versions soon. -->
+  <script src="https://vega.github.io/vega-webgl-renderer/vega.js"></script>
+  <script src="https://vega.github.io/vega-webgl-renderer/vega-webgl-renderer.js"></script>
+
+  <div id="vis"></div>
+  <script>
+    // Load in your own Vega spec here.
+    d3.json('https://vega.github.io/vega-webgl-renderer/spec/bar-hover-label.vg.json', function (spec) {
+      var view = new vega.View(vega.parse(spec))
+        .initialize(document.querySelector('#vis'))
+        .renderer('webgl')
+        .run();
+    });
+  </script>
+</body>
+```
 
 Build
 -----
