@@ -22,7 +22,7 @@
     "test:selenium": "sh test/test-selenium-up.sh >.selenium.log",
     "test:selenium:down": "sh test/test-selenium-down.sh",
     "lint": "eslint index.js src test",
-    "test": "result=true; selenium-standalone install; npm run test:server:down; npm run test:selenium:down; npm run test:server && npm run test:selenium && wdio wdio.conf.js && npm run lint || result=false; npm run test:server:down; npm run test:selenium:down; ${result}",
+    "test": "result=true; selenium-standalone install; npm run test:server:down; npm run test:selenium:down; npm run test:server && npm run test:selenium && sleep 5 && wdio wdio.conf.js && npm run lint || result=false; npm run test:server:down; npm run test:selenium:down; ${result}",
     "prepublish": "npm run build",
     "postpublish": "git push && git push --tags && zip -j build/vega-webgl-renderer.zip -- LICENSE README.md build/vega-webgl-renderer.js build/vega-webgl-renderer.min.js"
   },
