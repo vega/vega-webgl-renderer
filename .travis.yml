@@ -4,7 +4,7 @@ dist: trusty
 
 
 node_js:
-  - '0.12'
+  - '5.10'
 
 addons:
   firefox: latest

@@ -7,8 +7,7 @@
     "name": "Jeffrey Baumes",
     "url": "http://www.kitware.com/company/team/baumes.html"
   },
-  "contributors": [
-  ],
+  "contributors": [],
   "main": "build/vega-webgl-renderer.js",
   "module": "index",
   "jsnext:main": "index",
@@ -21,8 +20,10 @@
     "pretest": "rm -rf build && mkdir build && bin/rollup",
     "test:server": "sh test/test-server-up.sh >.server.log",
     "test:server:down": "sh test/test-server-down.sh",
+    "test:selenium": "sh test/test-selenium-up.sh >.selenium.log",
+    "test:selenium:down": "sh test/test-selenium-down.sh",
     "lint": "eslint index.js src test",
-    "test": "result=true; npm run test:server:down; npm run test:server && wdio wdio.conf.js && npm run lint || result=false; npm run test:server:down; ${result}",
+    "test": "result=true; npm run test:server:down; npm run test:selenium:down; npm run test:server && npm run test:selenium && wdio wdio.conf.js && npm run lint || result=false; npm run test:server:down; npm run test:selenium:down; ${result}",
     "prepublish": "npm run build",
     "postpublish": "git push && git push --tags && zip -j build/vega-webgl-renderer.zip -- LICENSE README.md build/vega-webgl-renderer.js build/vega-webgl-renderer.min.js"
   },
@@ -41,6 +42,7 @@
     "rollup": "0.36",
     "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-node-resolve": "^2.0.0",
+    "selenium-standalone": "^5.9.0",
     "wdio-dot-reporter": "0.0.6",
     "wdio-mocha-framework": "^0.5.4",
     "webdriverio": "^4.4.0"

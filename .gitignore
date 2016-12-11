@@ -1,6 +1,8 @@
 .DS_Store
 .server.log
 .server.pid
+.selenium.log
+.selenium.pid
 build/
 node_modules
 npm-debug.log
