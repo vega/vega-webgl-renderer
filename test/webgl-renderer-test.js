@@ -59,7 +59,7 @@ describe('WebGLRenderer', function() {
   it('should have the right title', function () {
     browser.url('/test/index.html');
     var title = browser.getTitle();
-    assert.equal(title, 'WebGLRenderer test suite');
+    assert.equal(title, 'Vega WebGL renderer test suite');
   });
 
   it('should render scenegraph to canvas', function () {
