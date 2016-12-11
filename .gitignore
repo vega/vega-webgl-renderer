@@ -1,5 +1,6 @@
 .DS_Store
 .server.log
+.server.pid
 build/
 node_modules
 npm-debug.log
