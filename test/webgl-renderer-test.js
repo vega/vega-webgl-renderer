@@ -1,8 +1,10 @@
 /*global it browser describe*/
 
-var fs = require('fs'),
-    res = './test/resources/',
-    assert = require('assert');
+var fs = require('fs');
+var FormData = require('form-data');
+var assert = require('assert');
+
+var res = './test/resources/';
 
 var GENERATE = require('./resources/generate-tests');
 
@@ -55,6 +57,90 @@ function clearPathCache(mark) {
   return mark;
 }
 
+function uploadImage(name, image) {
+  var key = process.env.GIRDER_KEY;
+  var folder = process.env.GIRDER_FOLDER;
+  browser.call(function () {
+    return new Promise(function(resolve, reject) {
+      var form = new FormData();
+      form.append('key', key);
+      form.submit({
+        host: 'data.kitware.com',
+        protocol: 'https:',
+        path: '/api/v1/api_key/token'
+      }, function(err, res) {
+        if (err) {
+          reject(err);
+        }
+        var r = '';
+        res.on('data', function(chunk) {
+          r += chunk;
+        });
+        res.on('end', function() {
+          console.log(r);
+          var result = JSON.parse(r);
+          var token = result.authToken.token;
+          var form = new FormData();
+          form.append('parentType', 'folder');
+          form.append('parentId', folder);
+          form.append('name', name);
+          form.append('size', image.length);
+          form.submit({
+            host: 'data.kitware.com',
+            protocol: 'https:',
+            path: '/api/v1/file',
+            headers: {'Girder-Token': token}
+          }, function(err, res) {
+            if (err) {
+              reject(err);
+            }
+            var r = '';
+            res.on('data', function(chunk) {
+              r += chunk;
+            });
+            res.on('end', function() {
+              console.log(r);
+              var result = JSON.parse(r);
+              var form = new FormData();
+              form.append('uploadId', result._id);
+              form.append('offset', 0);
+              form.append('chunk', image, {
+                filename: name,
+                contentType: 'image/png'
+              });
+              form.submit({
+                host: 'data.kitware.com',
+                protocol: 'https:',
+                path: '/api/v1/file/chunk',
+                headers: {'Girder-Token': token}
+              }, function(err, res) {
+                var r = '';
+                res.on('data', function(chunk) {
+                  r += chunk;
+                });
+                res.on('end', function() {
+                  console.log(r);
+                  resolve(r);
+                });
+                res.resume();
+              });
+            });
+            res.resume();
+          });
+        });
+        res.resume();
+      });
+    });
+  });
+}
+
+function checkImage(name, image, file) {
+  if (process.env.TRAVIS && image+'' !== file) {
+    uploadImage(process.env.TRAVIS_JOB_NUMBER + '-' + name, image);
+  }
+  assert.equal(''+image, file);
+}
+
 describe('WebGLRenderer', function() {
   it('should have the right title', function () {
     browser.url('/test/index.html');
@@ -67,7 +153,7 @@ describe('WebGLRenderer', function() {
     var image = render(scene, 400, 200);
     generate('png/scenegraph-rect.png', image);
     var file = load('png/scenegraph-rect.png');
-    assert.equal(image+'', file);
+    checkImage('scenegraph-rect.png', image, file);
   });
 
   it('should support clipping and gradients', function () {
@@ -75,13 +161,13 @@ describe('WebGLRenderer', function() {
     var image = render(scene, 102, 102);
     generate('png/scenegraph-defs.png', image);
     var file = load('png/scenegraph-defs.png');
-    assert.equal(image+'', file);
+    checkImage('scenegraph-defs.png', image, file);
 
     var scene2 = loadScene('scenegraph-defs2.json');
     image = render(scene2, 102, 102);
     generate('png/scenegraph-defs2.png', image);
     file = load('png/scenegraph-defs2.png');
-    assert.equal(image+'', file);
+    checkImage('scenegraph-defs2.png', image, file);
   });
 
   it('should support axes, legends and sub-groups', function () {
@@ -89,7 +175,7 @@ describe('WebGLRenderer', function() {
     var image = render(scene, 360, 740);
     generate('png/scenegraph-barley.png', image);
     var file = load('png/scenegraph-barley.png');
-    assert.equal(image+'', file);
+    checkImage('scenegraph-barley.png', image, file);
   });
 
   // it('WebGLRenderer should support full redraw', function () {
@@ -256,14 +342,14 @@ describe('WebGLRenderer', function() {
     var image = render(marks.arc, 500, 500);
     generate('png/marks-arc.png', image);
     var file = load('png/marks-arc.png');
-    assert.equal(image+'', file);
+    checkImage('marks-area-arc.png', image, file);
   });
 
   it('should render horizontal area mark', function () {
     var image = render(marks['area-h'], 500, 500);
     generate('png/marks-area-h.png', image);
     var file = load('png/marks-area-h.png');
-    assert.equal(image+'', file);
+    checkImage('marks-area-h.png', image, file);
 
     // // clear path cache and re-render
     // image = render(clearPathCache(marks['area-h']), 500, 500);
@@ -274,7 +360,7 @@ describe('WebGLRenderer', function() {
     var image = render(marks['area-v'], 500, 500);
     generate('png/marks-area-v.png', image);
     var file = load('png/marks-area-v.png');
-    assert.equal(image+'', file);
+    checkImage('marks-area-v.png', image, file);
 
     // // clear path cache and re-render
     // image = render(clearPathCache(marks['area-v']), 500, 500);
@@ -285,21 +371,21 @@ describe('WebGLRenderer', function() {
     var image = render(marks['area-breaks'], 500, 500);
     generate('png/marks-area-breaks.png', image);
     var file = load('png/marks-area-breaks.png');
-    assert.equal(image+'', file);
+    checkImage('marks-area-breaks.png', image, file);
   });
 
   it('should render trail area mark', function () {
     var image = render(marks['area-trail'], 500, 500);
     generate('png/marks-area-trail.png', image);
     var file = load('png/marks-area-trail.png');
-    assert.equal(image+'', file);
+    checkImage('marks-area-trail.png', image, file);
   });
 
   it('should render group mark', function () {
     var image = render(marks.group, 500, 500);
     generate('png/marks-group.png', image);
     var file = load('png/marks-group.png');
-    assert.equal(image+'', file);
+    checkImage('marks-group.png', image, file);
   });
 
   it('should render image mark', function () {
@@ -312,7 +398,7 @@ describe('WebGLRenderer', function() {
     var image = render(marks.image, 500, 500);
     generate('png/marks-image.png', image);
     var file = load('png/marks-image.png');
-    assert.equal(image+'', file);
+    checkImage('marks-image.png', image, file);
   });
 
   // it('should skip invalid image', function () {
@@ -332,12 +418,12 @@ describe('WebGLRenderer', function() {
     var image = render(marks['line-1'], 500, 500);
     generate('png/marks-line-1.png', image);
     var file = load('png/marks-line-1.png');
-    assert.equal(image+'', file);
+    checkImage('marks-line-1.png', image, file);
 
     image = render(marks['line-2'], 500, 500);
     generate('png/marks-line-2.png', image);
     file = load('png/marks-line-2.png');
-    assert.equal(image+'', file);
+    checkImage('marks-line-2.png', image, file);
 
     // // clear path cache and re-render
     // image = render(clearPathCache(marks['line-2']), 500, 500);
@@ -348,45 +434,45 @@ describe('WebGLRenderer', function() {
     var image = render(marks['line-breaks'], 500, 500);
     generate('png/marks-line-breaks.png', image);
     var file = load('png/marks-line-breaks.png');
-    assert.equal(image+'', file);
+    checkImage('marks-line-breaks.png', image, file);
   });
 
   it('should render path mark', function () {
     var image = render(marks.path, 500, 500);
     generate('png/marks-path.png', image);
     var file = load('png/marks-path.png');
-    assert.equal(image+'', file);
+    checkImage('marks-path.png', image, file);
 
     // clear path cache and re-render
     image = render(clearPathCache(marks.path), 500, 500);
-    assert.equal(image+'', file);
+    checkImage('marks-path-clear.png', image, file);
   });
 
   it('should render rect mark', function () {
     var image = render(marks.rect, 500, 500);
     generate('png/marks-rect.png', image);
     var file = load('png/marks-rect.png');
-    assert.equal(image+'', file);
+    checkImage('marks-rect.png', image, file);
   });
 
   it('should render rule mark', function () {
     var image = render(marks.rule, 500, 500);
     generate('png/marks-rule.png', image);
     var file = load('png/marks-rule.png');
-    assert.equal(image+'', file);
+    checkImage('marks-rule.png', image, file);
   });
 
   it('should render symbol mark', function () {
     var image = render(marks.symbol, 500, 500);
     generate('png/marks-symbol.png', image);
     var file = load('png/marks-symbol.png');
-    assert.equal(image+'', file);
+    checkImage('marks-symbol.png', image, file);
   });
 
   it('should render text mark', function () {
     var image = render(marks.text, 500, 500);
     generate('png/marks-text.png', image);
     var file = load('png/marks-text.png');
-    assert.equal(image+'', file);
+    checkImage('marks-text.png', image, file);
   });
 });

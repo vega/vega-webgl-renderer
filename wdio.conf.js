@@ -45,7 +45,7 @@ exports.config = {
         maxInstances: 5,
         browserName: 'chrome',
         chromeOptions: {
-          args: ['--use-gl=osmesa']
+          args: process.env.TRAVIS ? ['--use-gl=osmesa'] : []
         }
     }],
     //
