@@ -1,6 +1,6 @@
 {
   "name": "vega-webgl-renderer",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Vega WebGL renderer.",
   "license": "BSD-3-Clause",
   "author": {
