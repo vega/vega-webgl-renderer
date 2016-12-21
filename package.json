@@ -16,7 +16,9 @@
     "url": "http://github.com/jeffbaumes/vega-webgl-renderer.git"
   },
   "scripts": {
+    "prebuild": "rm -rf build && mkdir build",
     "build": "bin/rollup",
+    "postbuild": "uglifyjs build/vega-webgl-renderer.js -c -m -o build/vega-webgl-renderer.min.js",
     "test:server": "sh test/test-server-up.sh >.server.log",
     "test:server:down": "sh test/test-server-down.sh",
     "test:selenium": "sh test/test-selenium-up.sh >.selenium.log",
@@ -44,6 +46,7 @@
     "rollup-plugin-commonjs": "^5.0.5",
     "rollup-plugin-node-resolve": "^2.0.0",
     "selenium-standalone": "^5.9.0",
+    "uglify-js": "2",
     "wdio-dot-reporter": "0.0.6",
     "wdio-mocha-framework": "^0.5.4",
     "webdriverio": "^4.4.0"
