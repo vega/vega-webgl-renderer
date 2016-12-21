@@ -27,10 +27,8 @@ The WebGL renderer requires Vega 3.0 (currently in beta).
 ```html
 <body>
   <script src="https://d3js.org/d3.v4.min.js"></script>
-
-  <!-- You will be able to use released versions soon. -->
-  <script src="https://vega.github.io/vega-webgl-renderer/vega.js"></script>
-  <script src="https://vega.github.io/vega-webgl-renderer/vega-webgl-renderer.js"></script>
+  <script src="https://unpkg.com/vega/build/vega.min.js" charset="utf-8"></script>
+  <script src="https://unpkg.com/vega-webgl-renderer/build/vega-webgl-renderer.js" charset="utf-8"></script>
 
   <div id="vis"></div>
   <script>
